@@ -11,6 +11,9 @@ def index():
         role = request.form.get("role")
         experience = request.form.get("experience")
 
+        conn = None
+        cursor = None
+
         try:
             conn = mysql.connector.connect(
                 host=os.getenv("DB_HOST"),
@@ -18,7 +21,8 @@ def index():
                 password=os.getenv("DB_PASS"),
                 database=os.getenv("DB_NAME"),
                 port=3306,
-                charset="utf8mb4"
+                charset="utf8mb4",
+                connection_timeout=5   # ⭐ VERY IMPORTANT
             )
 
             cursor = conn.cursor()
@@ -32,9 +36,9 @@ def index():
             return f"<h3>Database error: {err}</h3>", 500
 
         finally:
-            if cursor:
+            if cursor is not None:
                 cursor.close()
-            if conn:
+            if conn is not None:
                 conn.close()
 
     return """
