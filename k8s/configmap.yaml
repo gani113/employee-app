@@ -3,5 +3,5 @@ kind: ConfigMap
 metadata:
   name: app-config
 data:
-  DB_HOST: "34.93.216.151"
+  DB_HOST: "127.0.0.1"
   DB_NAME: "employee_db"

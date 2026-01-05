@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: employee-app
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: employee
@@ -13,9 +13,10 @@ spec:
         app: employee
     spec:
       containers:
+
+      # 🔹 Flask App
       - name: app
         image: IMAGE_PLACEHOLDER
-        imagePullPolicy: Always
         ports:
         - containerPort: 8081
         envFrom:
@@ -23,3 +24,48 @@ spec:
             name: app-config
         - secretRef:
             name: app-secret
+
+      # 🔹 Cloud SQL Auth Proxy (NEW)
+      - name: cloud-sql-proxy
+        image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.8.1
+        args:
+          - "--structured-logs"
+          - "--port=3306"
+          - "gcp-prep26:asia-south1:employee-mysql"
+
+
+
+
+
+
+
+
+
+# ====================================
+# apiVersion: apps/v1
+# # kind: Deployment
+# # metadata:
+# #   name: employee-app
+# # spec:
+# #   replicas: 1
+# #   selector:
+# #     matchLabels:
+# #       app: employee
+# #   template:
+# #     metadata:
+# #       labels:
+# #         app: employee
+# #     spec:
+# #       containers:
+# #       - name: app
+# #         image: IMAGE_PLACEHOLDER
+# #         imagePullPolicy: Always
+# #         ports:
+# #         - containerPort: 8081
+# #         envFrom:
+# #         - configMapRef:
+# #             name: app-config
+# #         - secretRef:
+# #             name: app-secret
+
+
